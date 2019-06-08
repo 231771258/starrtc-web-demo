@@ -11,7 +11,7 @@ var videoLiveApplyDialog = null;
 
 var tmpStream;
 
-////////////////////////共有云私有云区别搜索 StarRtc.Instance.configModePulic 查看
+////////////////////////公有云私有云区别搜索 StarRtc.Instance.configModePulic 查看
 
 ////////////////////////私有云改配置///////////////////////
 ///////////////////////以下10.90.7.70需替换为私有部署IP////
@@ -20,7 +20,7 @@ var tmpStream;
 
 //StarRtc.Instance.setMsgServerInfo("10.90.7.70", 19903) 					//ip, websocket port  //需要手动从浏览器输入 https://10.90.7.70:29991 信任证书
 
-//StarRtc.Instance.setchatRoomServerInfo("10.90.7.70", 19906) 			//ip, websocket port //需要手动从浏览器输入 https://10.90.7.70:29993 信任证书
+//StarRtc.Instance.setChatRoomServerInfo("10.90.7.70", 19906) 			//ip, websocket port //需要手动从浏览器输入 https://10.90.7.70:29993 信任证书
 
 //StarRtc.Instance.setSrcServerInfo("10.90.7.70", 19934, 19935)  			//ip, websocket port, webrtc port //需要手动从浏览器输入 https://10.90.7.70:29994 信任证书
 
@@ -448,6 +448,32 @@ function starRtcLoginCallBack(data, status) {
 					break;
 			}
 			break;
+		case "onGetGroupList":
+			break;
+		case "onGetOnlineNumber":
+			break;
+		case "onGetGroupUserList":
+			break;
+		case "onGetAllUserList":
+			break;
+		case "onPushGroupSystemMsgFin":
+			break;
+		case "onPushSystemMsgFin":
+			break;
+		case "onUnsetGroupMsgIgnoreFin":
+			break;
+		case "onSetGroupMsgIgnoreFin":
+			break;
+		case "onRemoveGroupUserFin":
+			break;
+		case "onAddGroupUserFin":
+			break;
+		case "onDelGroupFin":
+			break;
+		case "onCreateGroupFin":
+			break;
+		case "onSendGroupMsgFin":
+			break;
 	}
 };
 
@@ -658,7 +684,7 @@ function videoMeetingCallBack(data, status, oper) {
 							$.get(StarRtc.Instance.workServerUrl + "/meeting/store?appid=" + agentId + "&ID=" + data.userData.roomInfo.ID + "&Name=" + data.userData.roomInfo.Name + "&Creator=" + data.userData.roomInfo.Creator);
 						}
 						else {
-							StarRtc.Instance.reportRoom(CHATROOM_LIST_TYPE.CHATROOM_LIST_TYPE_MEETING, data.userData.roomInfo, function (status) {
+							StarRtc.Instance.reportVideoMeetingRoom(data.userData.roomInfo, function (status) {
 								console.log("创建" + status);
 							});
 						}
@@ -719,7 +745,7 @@ function exitVideoMeetingFunc() {
 function videoMeetingAddNewVideo(newVideoId, stream, clickCallback) {
 	var parentObj = $("#videoMeetingVideoZone");
 	var wrapperObj = $("<div></div>");
-	var videoObj = $("<video id=\"" + newVideoId + "\" style=\"width:100%;height:100%\" muted=\"true\"></video>");
+	var videoObj = $("<video id=\"" + newVideoId + "\" style=\"width:100%;height:100%\"></video>");
 
 	videoObj.bind("click", clickCallback);
 
@@ -934,7 +960,7 @@ function videoLiveSrcCallBack(data, status, oper) {
 								$.get(StarRtc.Instance.workServerUrl + "/live/store?appid=" + agentId + "&ID=" + data.userData.roomInfo.ID + "&Name=" + data.userData.roomInfo.Name + "&Creator=" + data.userData.roomInfo.Creator);
 							}
 							else {
-								StarRtc.Instance.reportRoom(CHATROOM_LIST_TYPE.CHATROOM_LIST_TYPE_LIVE, data.userData.roomInfo, function (status) {
+								StarRtc.Instance.reportVideoLiveRoom(data.userData.roomInfo, function (status) {
 									console.log("创建" + status);
 								});
 							}
@@ -2112,7 +2138,7 @@ $().ready(function () {
 
 	var localId = getCookie("starrtc_userId");
 	var localAuthKey = getCookie("starrtc_authKey");
-	if (localId != "" && localAuthKey != "") {
+	if (localId != "" && (localAuthKey != "" || (!StarRtc.Instance.configModePulic))) {
 		userId = localId;
 		authKey = localAuthKey;
 		loginSuccessViewSet();
